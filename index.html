@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automatic Face Attendance System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+        <div class="logo">
+            <i class="fas fa-graduation-cap"></i>
+            <h2>Face Attendance</h2>
+        </div>
+
+        <ul class="nav-links">
+            <li class="nav-item active" data-section="dashboard">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </li>
+            <li class="nav-item" data-section="register">
+                <i class="fas fa-user-plus"></i>
+                <span>Register Student</span>
+            </li>
+            <li class="nav-item" data-section="attendance">
+                <i class="fas fa-camera"></i>
+                <span>Take Attendance</span>
+            </li>
+            <li class="nav-item" data-section="reports">
+                <i class="fas fa-chart-bar"></i>
+                <span>Reports</span>
+            </li>
+            <li class="nav-item" data-section="settings">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </li>
+            <li class="nav-item" data-section="upgrade">
+                <i class="fas fa-rocket"></i>
+                <span>Future Enhancements</span>
+            </li>
+        </ul>
+
+        <div class="theme-toggle">
+            <i class="fas fa-moon"></i>
+            <label class="switch">
+                <input type="checkbox" id="themeSwitch">
+                <span class="slider"></span>
+            </label>
+            <i class="fas fa-sun"></i>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <h1 id="pageTitle">Dashboard</h1>
+                <p id="pageSubtitle">Automatic Face Attendance System</p>
+            </div>
+            <div class="header-right">
+                <div class="date-time">
+                    <span id="currentDate"></span>
+                    <span id="currentTime"></span>
+                </div>
+                <button class="btn btn-secondary" id="resetDemoBtn">
+                    <i class="fas fa-redo"></i> Reset Demo Data
+                </button>
+            </div>
+        </header>
+
+        <!-- Section Container -->
+        <div class="section-container">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="section active">
+                <div class="stats-cards">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalStudents">0</h3>
+                            <p>Total Students</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="presentToday">0</h3>
+                            <p>Present Today</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-user-times"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="absentToday">0</h3>
+                            <p>Absent Today</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="attendanceRate">0%</h3>
+                            <p>Today's Attendance Rate</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="studentsWithFaces">0</h3>
+                            <p>With Face Data</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-history"></i> Recent Attendance</h3>
+                            <button class="btn btn-small" id="refreshDashboard">
+                                <i class="fas fa-sync-alt"></i> Refresh
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Time</th>
+                                        <th>Name</th>
+                                        <th>Roll No</th>
+                                        <th>Faculty</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentAttendance">
+                                    <!-- Recent attendance will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-calendar-alt"></i> Today's Summary</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="attendance-summary">
+                                <div class="summary-item present">
+                                    <i class="fas fa-user-check"></i>
+                                    <span>Present: <strong id="presentCount">0</strong></span>
+                                </div>
+                                <div class="summary-item absent">
+                                    <i class="fas fa-user-times"></i>
+                                    <span>Absent: <strong id="absentCount">0</strong></span>
+                                </div>
+                                <div class="summary-item total">
+                                    <i class="fas fa-users"></i>
+                                    <span>Total: <strong id="totalCount">0</strong></span>
+                                </div>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="attendanceProgress" style="width: 0%"></div>
+                                </div>
+                                <div class="progress-label">
+                                    <span>Attendance Rate: <strong id="progressPercent">0%</strong></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Register Student Section -->
+            <section id="register" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-user-plus"></i> Register New Student</h3>
+                        <p>Complete the steps below to register a student with facial data</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="registration-wizard">
+                            <div class="wizard-steps">
+                                <div class="wizard-step active" data-step="1">
+                                    <span class="step-number">1</span>
+                                    <span class="step-label">Basic Info</span>
+                                </div>
+                                <div class="wizard-step" data-step="2">
+                                    <span class="step-number">2</span>
+                                    <span class="step-label">Faculty Details</span>
+                                </div>
+                                <div class="wizard-step" data-step="3">
+                                    <span class="step-number">3</span>
+                                    <span class="step-label">Face Capture</span>
+                                </div>
+                                <div class="wizard-step" data-step="4">
+                                    <span class="step-number">4</span>
+                                    <span class="step-label">Confirmation</span>
+                                </div>
+                            </div>
+
+                            <div class="wizard-content">
+                                <!-- Step 1: Basic Information -->
+                                <div class="wizard-pane active" data-step="1">
+                                    <h4>Student Basic Information</h4>
+                                    <div class="form-group">
+                                        <label for="rollNumber">Roll Number *</label>
+                                        <input type="text" id="rollNumber" placeholder="Enter unique roll number">
+                                        <div class="error-message" id="rollNumberError"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="fullName">Full Name *</label>
+                                        <input type="text" id="fullName" placeholder="Enter student's full name">
+                                        <div class="error-message" id="fullNameError"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email">Email Address</label>
+                                        <input type="email" id="email" placeholder="student@college.edu">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="phone">Phone Number</label>
+                                        <input type="tel" id="phone" placeholder="+1 (555) 123-4567">
+                                    </div>
+                                </div>
+
+                                <!-- Step 2: Faculty Details -->
+                                <div class="wizard-pane" data-step="2">
+                                    <h4>Academic Information</h4>
+                                    <div class="form-group">
+                                        <label for="faculty">Faculty *</label>
+                                        <select id="faculty">
+                                            <option value="">Select Faculty</option>
+                                            <option value="BE IT">BE Information Technology</option>
+                                            <option value="BE Computer">BE Computer Engineering</option>
+                                            <option value="BE Civil">BE Civil Engineering</option>
+                                            <option value="BE Electrical">BE Electrical Engineering</option>
+                                            <option value="BE Electronics">BE Electronics Engineering</option>
+                                            <option value="BCA">Bachelor of Computer Applications</option>
+                                            <option value="BSc IT">BSc Information Technology</option>
+                                            <option value="MCA">Master of Computer Applications</option>
+                                        </select>
+                                        <div class="error-message" id="facultyError"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="semester">Semester *</label>
+                                        <select id="semester">
+                                            <option value="">Select Semester</option>
+                                            <option value="1">Semester 1</option>
+                                            <option value="2">Semester 2</option>
+                                            <option value="3">Semester 3</option>
+                                            <option value="4">Semester 4</option>
+                                            <option value="5">Semester 5</option>
+                                            <option value="6">Semester 6</option>
+                                            <option value="7">Semester 7</option>
+                                            <option value="8">Semester 8</option>
+                                        </select>
+                                        <div class="error-message" id="semesterError"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="section">Class / Section *</label>
+                                        <input type="text" id="section" placeholder="e.g., A, B, C, or specific class">
+                                        <div class="error-message" id="sectionError"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="academicYear">Academic Year</label>
+                                        <input type="text" id="academicYear" placeholder="e.g., 2023-2024">
+                                    </div>
+                                </div>
+
+                                <!-- Step 3: Face Capture -->
+                                <div class="wizard-pane" data-step="3">
+                                    <h4>Face Image Capture</h4>
+                                    <p class="info-text">Position the student's face clearly in the camera frame. Ensure
+                                        good lighting.</p>
+
+                                    <div class="camera-container">
+                                        <div class="camera-preview">
+                                            <video id="cameraPreview" autoplay playsinline></video>
+                                            <canvas id="captureCanvas" style="display: none;"></canvas>
+                                        </div>
+
+                                        <div class="camera-controls">
+                                            <button class="btn btn-primary" id="startCameraBtn">
+                                                <i class="fas fa-camera"></i> Start Camera
+                                            </button>
+                                            <button class="btn btn-success" id="captureBtn" disabled>
+                                                <i class="fas fa-camera-retro"></i> Capture Image
+                                            </button>
+                                            <button class="btn btn-secondary" id="retakeBtn" disabled>
+                                                <i class="fas fa-redo"></i> Retake
+                                            </button>
+                                        </div>
+
+                                        <div class="captured-preview" id="capturedPreview">
+                                            <p>Captured image will appear here</p>
+                                            <img id="capturedImage" alt="Captured face">
+                                        </div>
+                                    </div>
+
+                                    <div class="simulation-notice">
+                                        <i class="fas fa-info-circle"></i>
+                                        <span>In this demo, face recognition is simulated. In production, this would
+                                            capture facial features for AI recognition.</span>
+                                    </div>
+                                </div>
+
+                                <!-- Step 4: Confirmation -->
+                                <div class="wizard-pane" data-step="4">
+                                    <h4>Confirmation & Save</h4>
+                                    <div class="confirmation-summary">
+                                        <div class="summary-row">
+                                            <strong>Roll Number:</strong>
+                                            <span id="confirmRollNo">-</span>
+                                        </div>
+                                        <div class="summary-row">
+                                            <strong>Name:</strong>
+                                            <span id="confirmName">-</span>
+                                        </div>
+                                        <div class="summary-row">
+                                            <strong>Faculty:</strong>
+                                            <span id="confirmFaculty">-</span>
+                                        </div>
+                                        <div class="summary-row">
+                                            <strong>Semester:</strong>
+                                            <span id="confirmSemester">-</span>
+                                        </div>
+                                        <div class="summary-row">
+                                            <strong>Section:</strong>
+                                            <span id="confirmSection">-</span>
+                                        </div>
+                                        <div class="summary-row">
+                                            <strong>Face Image:</strong>
+                                            <span id="confirmImageStatus">Not captured</span>
+                                            <img id="confirmImagePreview" alt="Captured face"
+                                                style="max-width:140px; display:none; margin-left:10px; vertical-align:middle;" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>
+                                            <input type="checkbox" id="confirmData">
+                                            I confirm that all information is correct
+                                        </label>
+                                    </div>
+
+                                    <div class="alert alert-success" id="successAlert" style="display: none;">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span>Student registered successfully!</span>
+                                    </div>
+
+                                    <div class="alert alert-error" id="errorAlert" style="display: none;">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                        <span id="errorMessage">Error occurred</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="wizard-actions">
+                                <button class="btn btn-secondary" id="prevBtn" disabled>
+                                    <i class="fas fa-arrow-left"></i> Previous
+                                </button>
+                                <button class="btn btn-primary" id="nextBtn">
+                                    Next <i class="fas fa-arrow-right"></i>
+                                </button>
+                                <button class="btn btn-success" id="saveBtn" style="display: none;">
+                                    <i class="fas fa-save"></i> Save Student
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Registered Students List -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h3><i class="fas fa-list"></i> Registered Students</h3>
+                        <button class="btn btn-small" id="exportStudentsBtn">
+                            <i class="fas fa-download"></i> Export CSV
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Roll No</th>
+                                        <th>Name</th>
+                                        <th>Faculty</th>
+                                        <th>Semester</th>
+                                        <th>Section</th>
+                                        <th>Academic Year</th>
+                                        <th>Registered On</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="studentsList">
+                                    <!-- Students list will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Take Attendance Section -->
+            <section id="attendance" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-camera"></i> Automatic Face Attendance</h3>
+                        <p>Start camera to automatically detect and mark attendance</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="attendance-container">
+                            <div class="camera-section">
+                                <div class="camera-box">
+                                    <video id="attendanceCamera" autoplay playsinline></video>
+                                    <div class="camera-overlay">
+                                        <div class="face-frame"></div>
+                                        <div class="scanning-animation">
+                                            <div class="scanning-line"></div>
+                                        </div>
+                                    </div>
+                                    <div class="camera-status" id="cameraStatus">
+                                        <i class="fas fa-video-slash"></i>
+                                        <span>Camera is off</span>
+                                    </div>
+                                </div>
+
+                                <div class="camera-buttons">
+                                    <button class="btn btn-primary" id="startAttendanceCamera">
+                                        <i class="fas fa-play"></i> Start Camera
+                                    </button>
+                                    <button class="btn btn-secondary" id="stopAttendanceCamera" disabled>
+                                        <i class="fas fa-stop"></i> Stop Camera
+                                    </button>
+                                    <button class="btn btn-success" id="simulateScan">
+                                        <i class="fas fa-user-check"></i> Simulate Scan
+                                    </button>
+                                </div>
+
+                                <div class="simulation-controls">
+                                    <div class="form-group">
+                                        <label>Simulation Mode:</label>
+                                        <select id="simulationMode">
+                                            <option value="random">Random Recognition</option>
+                                            <option value="specific">Specific Student</option>
+                                            <option value="unrecognized">Unrecognized Face</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group" id="specificStudentGroup" style="display: none;">
+                                        <label>Select Student:</label>
+                                        <select id="specificStudent">
+                                            <!-- Students will be populated here -->
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="attendance-results">
+                                <div class="result-card">
+                                    <h4><i class="fas fa-user-check"></i> Recognition Result</h4>
+                                    <div class="result-content" id="recognitionResult">
+                                        <div class="no-result">
+                                            <i class="fas fa-search"></i>
+                                            <p>Waiting for face scan...</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="result-card">
+                                    <h4><i class="fas fa-history"></i> Recent Scans</h4>
+                                    <div class="recent-scans" id="recentScans">
+                                        <!-- Recent scans will appear here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="demo-explanation">
+                            <h5><i class="fas fa-info-circle"></i> How It Works (Simulation)</h5>
+                            <p>This demo simulates face recognition:</p>
+                            <tr>
+                                <td colspan="8" style="text-align: center; color: var(--text-light); padding: 40px;">
+                                    <li>Click "Simulate Scan" to simulate face detection</li>
+                                    <li>System will randomly match with a registered student</li>
+                                    <li>Attendance is automatically marked if recognized</li>
+                                    <li>Choose simulation mode to control behavior</li>
+                                    </ol>
+                                    <p><strong>Note:</strong> In production, this would use real AI face recognition
+                                        with OpenCV/Python.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Today's Attendance Records -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h3><i class="fas fa-calendar-day"></i> Today's Attendance Records</h3>
+                        <div class="header-actions">
+                            <button class="btn btn-small" id="exportTodayBtn">
+                                <i class="fas fa-download"></i> Export Today's CSV
+                            </button>
+                            <button class="btn btn-small btn-secondary" id="refreshAttendance">
+                                <i class="fas fa-sync-alt"></i> Refresh
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Time</th>
+                                        <th>Roll No</th>
+                                        <th>Name</th>
+                                        <th>Faculty</th>
+                                        <th>Status</th>
+                                        <th>Method</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="todayAttendance">
+                                    <!-- Today's attendance will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Reports Section -->
+            <section id="reports" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-chart-bar"></i> Attendance Reports & Analytics</h3>
+                        <p>Generate and filter attendance reports</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="report-controls">
+                            <div class="filter-group">
+                                <label>Report Type:</label>
+                                <select id="reportType">
+                                    <option value="daily">Daily Report</option>
+                                    <option value="student">Student-wise Report</option>
+                                    <option value="faculty">Faculty-wise Report</option>
+                                    <option value="semester">Semester-wise Report</option>
+                                    <option value="monthly">Monthly Report</option>
+                                </select>
+                            </div>
+
+                            <div class="filter-group" id="dateFilter">
+                                <label>Date:</label>
+                                <input type="date" id="reportDate" value="">
+                            </div>
+
+                            <div class="filter-group" id="monthFilter" style="display: none;">
+                                <label>Month:</label>
+                                <input type="month" id="reportMonth" value="">
+                            </div>
+
+                            <div class="filter-group" id="studentFilter" style="display: none;">
+                                <label>Student:</label>
+                                <select id="reportStudent">
+                                    <option value="">All Students</option>
+                                </select>
+                            </div>
+
+                            <div class="filter-group" id="facultyFilter" style="display: none;">
+                                <label>Faculty:</label>
+                                <select id="reportFaculty">
+                                    <option value="">All Faculties</option>
+                                    <option value="BE IT">BE IT</option>
+                                    <option value="BE Computer">BE Computer</option>
+                                    <option value="BE Civil">BE Civil</option>
+                                    <option value="BE Electrical">BE Electrical</option>
+                                    <option value="BE Electronics">BE Electronics</option>
+                                    <option value="BCA">BCA</option>
+                                    <option value="BSc IT">BSc IT</option>
+                                    <option value="MCA">MCA</option>
+                                </select>
+                            </div>
+
+                            <div class="filter-group" id="semesterFilter" style="display: none;">
+                                <label>Semester:</label>
+                                <select id="reportSemester">
+                                    <option value="">All Semesters</option>
+                                    <option value="1">Semester 1</option>
+                                    <option value="2">Semester 2</option>
+                                    <option value="3">Semester 3</option>
+                                    <option value="4">Semester 4</option>
+                                    <option value="5">Semester 5</option>
+                                    <option value="6">Semester 6</option>
+                                    <option value="7">Semester 7</option>
+                                    <option value="8">Semester 8</option>
+                                </select>
+                            </div>
+
+                            <button class="btn btn-primary" id="generateReport">
+                                <i class="fas fa-filter"></i> Generate Report
+                            </button>
+
+                            <button class="btn btn-success" id="exportReportBtn" disabled>
+                                <i class="fas fa-download"></i> Export CSV
+                            </button>
+                        </div>
+
+                        <div class="report-results">
+                            <div class="report-header">
+                                <h4 id="reportTitle">Daily Attendance Report</h4>
+                                <div class="report-stats" id="reportStats">
+                                    <!-- Statistics will be shown here -->
+                                </div>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table class="data-table" id="reportTable">
+                                    <thead>
+                                        <!-- Table headers will be generated dynamically -->
+                                    </thead>
+                                    <tbody>
+                                        <!-- Report data will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="no-data" id="noReportData">
+                                <i class="fas fa-chart-line"></i>
+                                <p>No report data available. Generate a report using the filters above.</p>
+                            </div>
+                        </div>
+
+                        <div class="attendance-chart">
+                            <h4><i class="fas fa-chart-pie"></i> Attendance Distribution</h4>
+                            <div class="chart-container">
+                                <canvas id="attendanceChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-cog"></i> System Settings</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="settings-grid">
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4><i class="fas fa-palette"></i> Theme Settings</h4>
+                                    <p>Customize the appearance of the application</p>
+                                </div>
+                                <div class="setting-control">
+                                    <div class="theme-options">
+                                        <div class="theme-option" data-theme="light">
+                                            <div class="theme-preview light"></div>
+                                            <span>Light</span>
+                                        </div>
+                                        <div class="theme-option" data-theme="dark">
+                                            <div class="theme-preview dark"></div>
+                                            <span>Dark</span>
+                                        </div>
+                                        <div class="theme-option" data-theme="auto">
+                                            <div class="theme-preview auto">
+                                                <div class="half-light"></div>
+                                                <div class="half-dark"></div>
+                                            </div>
+                                            <span>Auto</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4><i class="fas fa-database"></i> Data Management</h4>
+                                    <p>Manage stored data and reset demo</p>
+                                </div>
+                                <div class="setting-control">
+                                    <button class="btn btn-secondary" id="clearDataBtn">
+                                        <i class="fas fa-trash"></i> Clear All Data
+                                    </button>
+                                    <button class="btn btn-primary" id="loadDemoDataBtn">
+                                        <i class="fas fa-magic"></i> Load Demo Data
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4><i class="fas fa-camera"></i> Camera Settings</h4>
+                                    <p>Configure camera behavior for attendance</p>
+                                </div>
+                                <div class="setting-control">
+                                    <div class="form-group">
+                                        <label>
+                                            <input type="checkbox" id="autoStartCamera" checked>
+                                            Auto-start camera on attendance page
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>
+                                            <input type="checkbox" id="enableSound" checked>
+                                            Enable sound notifications
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4><i class="fas fa-bell"></i> Notifications</h4>
+                                    <p>Configure system notifications</p>
+                                </div>
+                                <div class="setting-control">
+                                    <div class="form-group">
+                                        <label>
+                                            <input type="checkbox" id="notifySuccess" checked>
+                                            Success notifications
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>
+                                            <input type="checkbox" id="notifyError" checked>
+                                            Error notifications
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="data-stats">
+                            <h4><i class="fas fa-chart-bar"></i> Storage Statistics</h4>
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <span class="stat-label">Students Registered:</span>
+                                    <span class="stat-value" id="statStudents">0</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Attendance Records:</span>
+                                    <span class="stat-value" id="statAttendance">0</span>
+                                </div>
+                                <!-- Removed Storage Used and Last Backup as per user request -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Future Enhancements Section -->
+            <section id="upgrade" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-rocket"></i> Future Enhancements & Production Deployment</h3>
+                        <p>Instructions for upgrading to a production-ready system</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="upgrade-intro">
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle"></i>
+                                <div>
+                                    <strong>Current System:</strong> This is a demo version using simulated face
+                                    recognition and LocalStorage.
+                                    <br>
+                                    <strong>Production System:</strong> Would integrate real AI face recognition and
+                                    cloud database.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="enhancement-cards">
+                            <div class="enhancement-card">
+                                <div class="enhancement-icon">
+                                    <i class="fas fa-brain"></i>
+                                </div>
+                                <h4>1. Real Face Recognition AI</h4>
+                                <div class="tech-stack">
+                                    <span class="tech-badge">Python</span>
+                                    <span class="tech-badge">OpenCV</span>
+                                    <span class="tech-badge">dlib</span>
+                                    <span class="tech-badge">face_recognition</span>
+                                </div>
+                                <ul>
+                                    <li>Replace simulation with real face detection</li>
+                                    <li>Implement face encoding and matching</li>
+                                    <li>Add face landmark detection</li>
+                                    <li>Improve accuracy with deep learning models</li>
+                                </ul>
+                                <div class="code-snippet">
+                                    <pre><code># Python example with face_recognition library
+import face_recognition
+known_image = face_recognition.load_image_file("known.jpg")
+known_encoding = face_recognition.face_encodings(known_image)[0]
+unknown_image = face_recognition.load_image_file("unknown.jpg")
+unknown_encoding = face_recognition.face_encodings(unknown_image)[0]
+results = face_recognition.compare_faces([known_encoding], unknown_encoding)</code></pre>
+                                </div>
+                            </div>
+
+                            <div class="enhancement-card">
+                                <div class="enhancement-icon">
+                                    <i class="fas fa-database"></i>
+                                </div>
+                                <h4>2. Cloud Database Integration</h4>
+                                <div class="tech-stack">
+                                    <span class="tech-badge">Firebase</span>
+                                    <span class="tech-badge">MongoDB</span>
+                                    <span class="tech-badge">PostgreSQL</span>
+                                    <span class="tech-badge">AWS</span>
+                                </div>
+                                <ul>
+                                    <li>Replace LocalStorage with cloud database</li>
+                                    <li>Implement real-time synchronization</li>
+                                    <li>Add backup and recovery systems</li>
+                                    <li>Enable multi-device access</li>
+                                </ul>
+                                <div class="deployment-steps">
+                                    <h5>Deployment Steps:</h5>
+                                    <ol>
+                                        <li>Set up Firebase/Firestore database</li>
+                                        <li>Create collections: students, attendance, users</li>
+                                        <li>Implement authentication system</li>
+                                        <li>Migrate existing data</li>
+                                    </ol>
+                                </div>
+                            </div>
+
+                            <div class="enhancement-card">
+                                <div class="enhancement-icon">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <h4>3. Security & Authentication</h4>
+                                <div class="tech-stack">
+                                    <span class="tech-badge">JWT</span>
+                                    <span class="tech-badge">OAuth</span>
+                                    <span class="tech-badge">SSL/TLS</span>
+                                    <span class="tech-badge">Encryption</span>
+                                </div>
+                                <ul>
+                                    <li>Add role-based access control (Admin/Teacher)</li>
+                                    <li>Implement secure login system</li>
+                                    <li>Add data encryption at rest and in transit</li>
+                                    <li>Implement audit logs</li>
+                                </ul>
+                                <div class="code-snippet">
+                                    <pre><code>// Role-based access example
+const roles = {
+  ADMIN: ['view', 'edit', 'delete', 'export'],
+  TEACHER: ['view', 'edit', 'mark_attendance'],
+  STUDENT: ['view_own_attendance']
+};</code></pre>
+                                </div>
+                            </div>
+
+                            <div class="enhancement-card">
+                                <div class="enhancement-icon">
+                                    <i class="fas fa-mobile-alt"></i>
+                                </div>
+                                <h4>4. Mobile App & Features</h4>
+                                <div class="tech-stack">
+                                    <span class="tech-badge">React Native</span>
+                                    <span class="tech-badge">Flutter</span>
+                                    <span class="tech-badge">PWA</span>
+                                    <span class="tech-badge">Push Notifications</span>
+                                </div>
+                                <ul>
+                                    <li>Develop mobile apps for iOS & Android</li>
+                                    <li>Add push notifications for attendance alerts</li>
+                                    <li>Implement offline capability</li>
+                                    <li>Add parent portal access</li>
+                                </ul>
+                                <div class="features-list">
+                                    <h5>Additional Features:</h5>
+                                    <ul>
+                                        <li>Facial liveness detection</li>
+                                        <li>Attendance analytics dashboard</li>
+                                        <li>SMS/Email notifications to parents</li>
+                                        <li>Integration with college ERP</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="implementation-guide">
+                            <h4><i class="fas fa-code"></i> Implementation Roadmap</h4>
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-marker">1</div>
+                                    <div class="timeline-content">
+                                        <h5>Phase 1: Backend Development</h5>
+                                        <p>Set up Python/Flask/Django backend with face recognition API</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker">2</div>
+                                    <div class="timeline-content">
+                                        <h5>Phase 2: Database Migration</h5>
+                                        <p>Migrate from LocalStorage to cloud database (Firebase/PostgreSQL)</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker">3</div>
+                                    <div class="timeline-content">
+                                        <h5>Phase 3: Authentication System</h5>
+                                        <p>Implement secure login with role-based permissions</p>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker">4</div>
+                                    <div class="timeline-content">
+                                        <h5>Phase 4: Deployment</h5>
+                                        <p>Deploy on cloud platform (AWS/Heroku) with SSL certificate</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Automatic Face Attendance System - Demo Version | Built with HTML5, CSS3 & Vanilla JavaScript</p>
+            <p>For production deployment, refer to the Future Enhancements section</p>
+        </footer>
+    </main>
+
+    <!-- Audio Elements for Notifications -->
+    <audio id="successSound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="errorSound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3"
+            type="audio/mpeg">
+    </audio>
+    <audio id="scanSound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-scanner-beep-993.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- JavaScript Files -->
+    <script src="storage.js"></script>
+    <script src="theme.js"></script>
+    <script src="app.js"></script>
+    <script src="camera.js"></script>
+    <script src="student.js"></script>
+    <script src="attendance.js"></script>
+    <script src="report.js"></script>
+</body>
+
+</html>
